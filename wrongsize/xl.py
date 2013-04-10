@@ -193,3 +193,31 @@ def get_all_sheet_data(sht, pks, with_desc=False):
             raise
         result[key] = (r, data)
     return header, result
+
+def prettify_report(wb):
+    if len(self.get_sheet_names()) > 1:
+        dummy_sheet = wb.get_sheet_by_name('Sheet')
+        if dummy_sheet is not None:
+            wb.remove_sheet(dummy_sheet)
+
+    for shtname in wb.get_sheet_names():
+        sht = wb.get_sheet_by_name(shtname)
+
+        header = [(c, sht.cell(row=0, column=c).value) for c in range(254)]
+        header = [x for x in header if x[-1] is not None]
+        column_widths = [unilen(x) for x in header]
+        for r in xrange(0, 65532):
+            if sht.cell(row=r, column=0).value is None:
+                break
+            for c in range(len(header)):
+                cell = sht.cell(row=r, column=c)
+                cell.style.font.name = u'ＭＳ ゴシック'
+                value = cell.value
+                value = value if isinstance(value, basestring) else str(value)
+                column_widths[c] = max(column_widths[c], unilen(value))
+
+        for i, column_width in enumerate(column_widths):
+            sht.column_dimensions[get_column_letter(i+1)].width = column_width + 0.3
+
+        sht.garbage_collect()
+
