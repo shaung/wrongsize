@@ -11,7 +11,7 @@ logging.basicConfig(level=logging.INFO)
 from datetime import datetime
 from suds.client import Client
 
-from settings import *
+import settings
 
 
 def make_request(name, *args):
@@ -19,7 +19,7 @@ def make_request(name, *args):
     return client.service.Execute(*args)
 
 def get_url(endpoint, prefix=None):
-    return '%s%s' % (prefix or SOAP_URL_PREFIX, endpoint)
+    return '%s%s' % (prefix or settings.SOAP_URL_PREFIX, endpoint)
 
 def get_client(name, prefix=None):
     url = '%s?wsdl' % get_url(name, prefix=prefix)

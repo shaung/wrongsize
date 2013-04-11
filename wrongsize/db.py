@@ -8,7 +8,7 @@ from datetime import datetime, date, time
 from sqlalchemy import create_engine, MetaData, Table as DBTable
 from sqlalchemy.engine import reflection
 
-from settings import *
+import settings
 
 
 dbengine = None
@@ -17,11 +17,11 @@ inspector = None
 
 def inspect():
     global dbengine, inspector, dbmeta
-    dbengine = create_engine(DB_URI)
+    dbengine = create_engine(settings.DB_URI)
     inspector = reflection.Inspector.from_engine(dbengine)
 
-    if os.path.exists(DB_META_FILE):
-        with open(DB_META_FILE, 'rb') as f:
+    if os.path.exists(settings.DB_META_FILE):
+        with open(settings.DB_META_FILE, 'rb') as f:
             dbmeta = pickle.load(f)
     else:
         dbmeta = MetaData()
@@ -31,7 +31,7 @@ def inspect():
         for table_name in inspector.get_view_names():
             print table_name
             table = DBTable(table_name, dbmeta, autoload=True, autoload_with=dbengine)
-        with open(DB_META_FILE, 'wb') as f:
+        with open(settings.DB_META_FILE, 'wb') as f:
             pickle.dump(dbmeta, f)
 
     dbmeta.bind = dbengine
