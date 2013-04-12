@@ -48,15 +48,10 @@ class TableBase(object):
         self.table = DBTable(table_name, dbmeta, autoload=True, autoload_with=dbengine)
 
     def _parse_prefix(self):
-        if table_name[:3].lower() == 'tav':
-            self.prefix = ''
-        elif table_name.startswith('V_'):
-            self.prefix = ''
-        else:
-            self.prefix = table_name[:7]
+        self.prefix = ''
 
     def get_short_name(self):
-        return self.table_name[2:7].upper()
+        return self.table_name
 
     def __getattr__(self, name):
         try:
@@ -82,10 +77,8 @@ class TableBase(object):
         return cols
 
     def cnt(self, cond=None):
-        if cond is None:
-            return self.count().execute().fetchone()[0]
-        else:
-            return self.count(cond).execute().fetchone()[0]
+        stmt = self.count() if cond is None else self.count(cond)
+        return stmt.execute().fetchone()[0]
 
     def new(self, kws, conn=None):
         if self.prefix:
@@ -99,6 +92,11 @@ class TableBase(object):
         pks = inspector.get_pk_constraint(self.table_name)['constrained_columns']
         cond = reduce((lambda x, y: x & y), ((x == y) for (x, y) in zip((getattr(self.table.c, x) for x in pks) , args)))
         return self.table.select(cond).execute().fetchone()
+
+    def fetchall(self, cond=None):
+        stmt = self.select() if cond is None else self.select(cond)
+        for x in stmt.execute().fetchall():
+            yield x
 
 
 if __name__ == '__main__':
