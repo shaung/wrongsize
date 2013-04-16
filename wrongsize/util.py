@@ -1,6 +1,8 @@
 # coding: utf-8
 
+import os
 from datetime import datetime, date, time, timedelta
+import itertools
 
 def timeit(func):
     @wraps
@@ -85,3 +87,11 @@ class Console(object):
     def __exit__(self, exception_type, exception_value, traceback):
         sys.stdout = self.old_stdout
         self.output.close()
+
+
+def groupby(iterable, key):
+    groups = {}
+    iterable = sorted(iterable, key=key)
+    for k, g in itertools.groupby(iterable, key):
+        groups[k] = tuple(g)
+    return groups
