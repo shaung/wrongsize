@@ -4,6 +4,12 @@ import os
 from datetime import datetime, date, time, timedelta
 import itertools
 
+try:
+    from collections import OrderedDict
+except:
+    from ordereddict import OrderedDict
+
+
 def timeit(func):
     @wraps
     def f(*args, **kws):
@@ -90,7 +96,7 @@ class Console(object):
 
 
 def groupby(iterable, key):
-    groups = {}
+    groups = OrderedDict({})
     iterable = sorted(iterable, key=key)
     for k, g in itertools.groupby(iterable, key):
         groups[k] = tuple(g)

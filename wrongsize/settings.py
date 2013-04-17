@@ -12,5 +12,3 @@ def load(f):
 def load_default():
     with open(__CONF_PATH, 'rb') as f:
         load(f)
-
-load_default()
