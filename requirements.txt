@@ -9,6 +9,6 @@ openpyxl==1.6.1
 paramiko==1.9.0
 pycrypto==2.1.0
 pyodbc==3.0.6
-sqlautocode==0.7
 suds==0.4
 web.py==0.37
+PyYAML==3.10
