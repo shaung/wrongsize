@@ -33,5 +33,21 @@ def test_groupby():
     eq_(rslt, groupby(li, lambda x: x[0]))
 
 
+def test_iterparse():
+    from wrongsize.xml import XMLParser
+
+    parser = XMLParser('books.xml')
+
+    titles = []
+
+    def parse_title(elem):
+        title = elem.find('title').text
+        titles.append(title)
+
+    parser.iterparse('book', parse_title)
+
+    eq_(titles, ["XML Developer's Guide", "Midnight Rain", "Maeve Ascendant"])
+
+
 if __name__ == '__main__':
     inspect_db()
