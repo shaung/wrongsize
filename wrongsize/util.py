@@ -101,3 +101,14 @@ def groupby(iterable, key):
     for k, g in itertools.groupby(iterable, key):
         groups[k] = tuple(g)
     return groups
+
+
+def cmp_lists(li1, li2, f1=None, f2=None):
+    """Compare two lists.
+
+    Returns a 3-tuple of items [in both lists], [only in left], [only in right]
+    """
+
+    s1, s2 = set(map(f1, li1) if f1 else li1), set(map(f2, li2) if f2 else li2)
+    both, left, right = s1 & s2, s1 - s2, s2 - s1
+    return map(list, (both, left, right))
